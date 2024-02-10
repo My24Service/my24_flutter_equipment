@@ -103,8 +103,8 @@ class EquipmentTypeAheadModel {
 
 
 abstract class BaseEquipmentCreateQuick extends BaseModel {
-  final int id;
-  set id(int id) {
+  final int? id;
+  set id(int? id) {
     this.id = id;
   }
 
@@ -123,7 +123,7 @@ class EquipmentCreateQuickCustomer extends BaseEquipmentCreateQuick {
   final int? customer;
 
   EquipmentCreateQuickCustomer({
-    required int id,
+    int? id,
     required String name,
     required this.customer
   }) : super(
@@ -156,7 +156,7 @@ class EquipmentCreateQuickBranch extends BaseEquipmentCreateQuick {
   final int? branch;
 
   EquipmentCreateQuickBranch({
-    required int id,
+    int? id,
     required String name,
     required this.branch
   }) : super(
