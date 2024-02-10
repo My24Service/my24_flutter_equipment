@@ -6,7 +6,11 @@ import 'package:my24_flutter_core/models/models.dart';
 import 'models.dart';
 
 class EquipmentApi extends BaseCrud<Equipment, EquipmentPaginated> {
-  final String basePath = "/equipment/equipment";
+  @override
+  set basePath(String path) {
+    basePath = "/equipment/equipment";
+  }
+
   String? _typeAheadToken;
 
   @override
@@ -42,7 +46,7 @@ class EquipmentApi extends BaseCrud<Equipment, EquipmentPaginated> {
       _typeAheadToken = newToken.token;
     }
 
-    final url = branch == null ? await getUrl('/equipment/equipment/autocomplete/?q=' + query) : await getUrl('/equipment/equipment/autocomplete/?q=$query&branch=$branch');
+    final url = branch == null ? await getUrl('/equipment/equipment/autocomplete/?q=$query') : await getUrl('/equipment/equipment/autocomplete/?q=$query&branch=$branch');
     final response = await httpClient.get(
         Uri.parse(url),
         headers: getHeaders(_typeAheadToken)

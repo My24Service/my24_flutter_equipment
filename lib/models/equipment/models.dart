@@ -103,25 +103,33 @@ class EquipmentTypeAheadModel {
 
 
 abstract class BaseEquipmentCreateQuick extends BaseModel {
-  final int? id;
-  final String? name;
+  final int id;
+  set id(int id) {
+    this.id = id;
+  }
+
+  final String name;
+  set name(String name) {
+    this.name = name;
+  }
 
   BaseEquipmentCreateQuick({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
   });
 }
 
 class EquipmentCreateQuickCustomer extends BaseEquipmentCreateQuick {
-  final int? id;
-  final String? name;
   final int? customer;
 
   EquipmentCreateQuickCustomer({
-    this.id,
-    required this.name,
+    required int id,
+    required String name,
     required this.customer
-  });
+  }) : super(
+    id: id,
+    name: name
+  );
 
   factory EquipmentCreateQuickCustomer.fromJson(Map<String, dynamic> parsedJson) {
     return EquipmentCreateQuickCustomer(
@@ -133,8 +141,8 @@ class EquipmentCreateQuickCustomer extends BaseEquipmentCreateQuick {
 
   Map toMap() {
     return {
-      'name': this.name,
-      'customer': this.customer,
+      'name': name,
+      'customer': customer,
     };
   }
 
@@ -145,15 +153,16 @@ class EquipmentCreateQuickCustomer extends BaseEquipmentCreateQuick {
 }
 
 class EquipmentCreateQuickBranch extends BaseEquipmentCreateQuick {
-  final int? id;
-  final String? name;
   final int? branch;
 
   EquipmentCreateQuickBranch({
-    this.id,
-    required this.name,
+    required int id,
+    required String name,
     required this.branch
-  });
+  }) : super(
+    id: id,
+    name: name
+  );
 
   factory EquipmentCreateQuickBranch.fromJson(Map<String, dynamic> parsedJson) {
     return EquipmentCreateQuickBranch(
@@ -165,8 +174,8 @@ class EquipmentCreateQuickBranch extends BaseEquipmentCreateQuick {
 
   Map toMap() {
     return {
-      'name': this.name,
-      'branch': this.branch,
+      'name': name,
+      'branch': branch,
     };
   }
 
