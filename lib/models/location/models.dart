@@ -97,7 +97,7 @@ class EquipmentLocationCreateQuickCustomer extends BaseEquipmentLocationCreateQu
   final int? customer;
 
   EquipmentLocationCreateQuickCustomer({
-    required int id,
+    int? id,
     required String name,
     required this.customer
   }) : super(
