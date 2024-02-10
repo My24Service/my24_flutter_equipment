@@ -130,7 +130,7 @@ class EquipmentLocationCreateQuickBranch extends BaseEquipmentLocationCreateQuic
   final int? branch;
 
   EquipmentLocationCreateQuickBranch({
-    required int id,
+    int? id,
     required String name,
     required this.branch
   }) : super(
