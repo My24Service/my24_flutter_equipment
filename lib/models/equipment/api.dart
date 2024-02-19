@@ -7,8 +7,8 @@ import 'models.dart';
 
 class EquipmentApi extends BaseCrud<Equipment, EquipmentPaginated> {
   @override
-  set basePath(String path) {
-    basePath = "/equipment/equipment";
+  get basePath {
+    return "/equipment/equipment";
   }
 
   String? _typeAheadToken;

@@ -3,8 +3,8 @@ import 'models.dart';
 
 class EquipmentPartApi extends BaseCrud<EquipmentPart, EquipmentParts> {
   @override
-  set basePath(String path) {
-    basePath = "/equipment/equipment-part";
+  get basePath {
+    return "/equipment/equipment-part";
   }
 
   @override
