@@ -22,9 +22,12 @@ class EquipmentLocationApi extends BaseCrud<EquipmentLocation, EquipmentLocation
     return EquipmentLocations.fromJson(parsedJson!);
   }
 
-  Future<List<EquipmentLocation>> fetchLocationsForSelect() async {
+  Future<List<EquipmentLocation>> fetchLocationsForSelect({int? branch}) async {
+    final Map<String, dynamic> filters = branch != null ? {'branch': branch} : {};
     final String response = await super.getListResponseBody(
-        basePathAddition: 'list_for_select/');
+      filters: filters,
+      basePathAddition: 'list_for_select/'
+    );
 
     return EquipmentLocation.getListFromResponse(response);
   }
