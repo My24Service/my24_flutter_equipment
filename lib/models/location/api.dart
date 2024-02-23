@@ -46,7 +46,7 @@ class EquipmentLocationApi extends BaseCrud<EquipmentLocation, EquipmentLocation
 
   Future<EquipmentLocationCreateQuickResponse> createQuick(Map body) async {
     String basePathAddition = 'create_quick/';
-    final Map result = await (super.insertCustom(body, basePathAddition, returnTypeBool: false) as FutureOr<Map<dynamic, dynamic>>);
+    final Map result = await super.insertCustom(body, basePathAddition, returnTypeBool: false);
     return EquipmentLocationCreateQuickResponse.fromJson(result as Map<String, dynamic>);
   }
 

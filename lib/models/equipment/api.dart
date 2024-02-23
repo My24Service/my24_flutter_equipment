@@ -35,7 +35,7 @@ class EquipmentApi extends BaseCrud<Equipment, EquipmentPaginated> {
 
   Future<EquipmentCreateQuickResponse> createQuick(Map body) async {
     String basePathAddition = 'create_quick/';
-    final Map result = await (super.insertCustom(body, basePathAddition, returnTypeBool: false) as FutureOr<Map<dynamic, dynamic>>);
+    final Map result = await super.insertCustom(body, basePathAddition, returnTypeBool: false);
     return EquipmentCreateQuickResponse.fromJson(result as Map<String, dynamic>);
   }
 
@@ -53,6 +53,7 @@ class EquipmentApi extends BaseCrud<Equipment, EquipmentPaginated> {
     );
 
     if (response.statusCode == 200) {
+      print(response.body);
       var parsedJson = json.decode(response.body);
       var list = parsedJson as List;
       List<EquipmentTypeAheadModel> results = list.map((i) => EquipmentTypeAheadModel.fromJson(i)).toList();
