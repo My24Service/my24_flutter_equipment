@@ -6,11 +6,13 @@ class Equipment extends BaseModel {
   final int? id;
   final String? identifier;
   final String? name;
+  final int? location;
 
   Equipment({
     this.id,
     this.identifier,
     this.name,
+    this.location
   });
 
   factory Equipment.fromJson(Map<String, dynamic> parsedJson) {
@@ -18,12 +20,29 @@ class Equipment extends BaseModel {
       id: parsedJson['id'],
       identifier: parsedJson['identifier'],
       name: parsedJson['name'],
+      location: parsedJson['location'],
     );
   }
 
   @override
   String toJson() {
-    return '';
+    Map body = {
+      'id': id,
+    };
+
+    if (location != null) {
+      body['location'] = location;
+    }
+
+    if (name != null) {
+      body['name'] = name;
+    }
+
+    if (identifier != null) {
+      body['identifier'] = identifier;
+    }
+
+    return json.encode(body);
   }
 }
 
