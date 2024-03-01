@@ -50,29 +50,18 @@ class EquipmentLocationApi extends BaseCrud<EquipmentLocation, EquipmentLocation
     return EquipmentLocationCreateQuickResponse.fromJson(result as Map<String, dynamic>);
   }
 
-  Future <List<EquipmentLocationTypeAheadModel>> locationTypeAhead(String query, int? branch) async {
-    if (_typeAheadToken == null) {
-      SlidingToken newToken = await getNewToken();
-
-      _typeAheadToken = newToken.token;
+  Future <List<EquipmentLocationTypeAheadModel>> typeAhead(String query, int? branch) async {
+    Map<String, dynamic> filters = {'q': query};
+    if (branch != null) {
+      filters['branch'] = branch;
     }
+    final String responseBody = await getListResponseBody(
+        filters: filters, basePathAddition: 'autocomplete');
+    var parsedJson = json.decode(responseBody);
+    var list = parsedJson as List;
+    List<EquipmentLocationTypeAheadModel> results = list.map((i) =>
+        EquipmentLocationTypeAheadModel.fromJson(i)).toList();
 
-    final url = branch == null ? await getUrl('/equipment/location/autocomplete/?q=$query') : await getUrl('/equipment/location/autocomplete/?q=$query&branch=$branch');
-    final response = await httpClient.get(
-        Uri.parse(url),
-        headers: getHeaders(_typeAheadToken)
-    );
-
-    if (response.statusCode == 200) {
-      var parsedJson = json.decode(response.body);
-      var list = parsedJson as List;
-      List<EquipmentLocationTypeAheadModel> results = list.map(
-              (i) => EquipmentLocationTypeAheadModel.fromJson(i)
-      ).toList();
-
-      return results;
-    }
-
-    return [];
+    return results;
   }
 }

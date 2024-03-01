@@ -39,28 +39,23 @@ class EquipmentApi extends BaseCrud<Equipment, EquipmentPaginated> {
     return EquipmentCreateQuickResponse.fromJson(result as Map<String, dynamic>);
   }
 
-  Future <List<EquipmentTypeAheadModel>> equipmentTypeAhead(String query, int? branch) async {
-    if (_typeAheadToken == null) {
-      SlidingToken newToken = await getNewToken();
+  Future<Equipment> getByUuid(String uuid) async {
+    return await detail(uuid, basePathAddition: 'uuid/');
+  }
 
-      _typeAheadToken = newToken.token;
+  Future <List<EquipmentTypeAheadModel>> typeAhead(String query, int? branch) async {
+    Map<String, dynamic> filters = {'q': query};
+    if (branch != null) {
+      filters['branch'] = branch;
     }
 
-    final url = branch == null ? await getUrl('/equipment/equipment/autocomplete/?q=$query') : await getUrl('/equipment/equipment/autocomplete/?q=$query&branch=$branch');
-    final response = await httpClient.get(
-        Uri.parse(url),
-        headers: getHeaders(_typeAheadToken)
-    );
+    final String responseBody = await getListResponseBody(
+        filters: filters, basePathAddition: 'autocomplete');
+    var parsedJson = json.decode(responseBody);
+    var list = parsedJson as List;
+    List<EquipmentTypeAheadModel> results = list.map((i) =>
+        EquipmentTypeAheadModel.fromJson(i)).toList();
 
-    if (response.statusCode == 200) {
-      print(response.body);
-      var parsedJson = json.decode(response.body);
-      var list = parsedJson as List;
-      List<EquipmentTypeAheadModel> results = list.map((i) => EquipmentTypeAheadModel.fromJson(i)).toList();
-
-      return results;
-    }
-
-    return [];
+    return results;
   }
 }

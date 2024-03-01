@@ -1,18 +1,34 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 import 'package:my24_flutter_core/models/base_models.dart';
+
+class EquipmentPageMetaData {
+  final String? memberPicture;
+  final String? submodel;
+  final Widget? drawer;
+
+  EquipmentPageMetaData({
+    required this.memberPicture,
+    required this.submodel,
+    required this.drawer,
+  }) : super();
+}
 
 class Equipment extends BaseModel {
   final int? id;
   final String? identifier;
   final String? name;
   final int? location;
+  final String? locationName;
 
   Equipment({
     this.id,
     this.identifier,
     this.name,
-    this.location
+    this.location,
+    this.locationName
   });
 
   factory Equipment.fromJson(Map<String, dynamic> parsedJson) {
@@ -21,6 +37,7 @@ class Equipment extends BaseModel {
       identifier: parsedJson['identifier'],
       name: parsedJson['name'],
       location: parsedJson['location'],
+      locationName: parsedJson['location_name']
     );
   }
 
