@@ -36,9 +36,9 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget{
 
   BaseEquipmentDetailPage({
     super.key,
+    this.pk,
+    this.uuid,
     required this.bloc,
-    required this.pk,
-    required this.uuid,
     required this.navDetailFunction,
   });
 

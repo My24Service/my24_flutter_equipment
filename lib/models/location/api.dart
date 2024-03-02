@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:my24_flutter_core/api/base_crud.dart';
-import 'package:my24_flutter_core/models/models.dart';
 import 'models.dart';
 
 class EquipmentLocationApi extends BaseCrud<EquipmentLocation, EquipmentLocations> {
@@ -10,7 +9,6 @@ class EquipmentLocationApi extends BaseCrud<EquipmentLocation, EquipmentLocation
   get basePath {
     return "/equipment/location";
   }
-  String? _typeAheadToken;
 
   @override
   EquipmentLocation fromJsonDetail(Map<String, dynamic>? parsedJson) {

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:my24_flutter_core/api/base_crud.dart';
-import 'package:my24_flutter_core/models/models.dart';
 import 'models.dart';
 
 class EquipmentApi extends BaseCrud<Equipment, EquipmentPaginated> {
@@ -10,8 +9,6 @@ class EquipmentApi extends BaseCrud<Equipment, EquipmentPaginated> {
   get basePath {
     return "/equipment/equipment";
   }
-
-  String? _typeAheadToken;
 
   @override
   Equipment fromJsonDetail(Map<String, dynamic>? parsedJson) {
