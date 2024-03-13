@@ -20,16 +20,19 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget{
   final String? uuid;
   final CoreWidgets widgets = CoreWidgets();
   final NavDetailFunction navDetailFunction;
-  final Widget? drawer;
 
-  Future<EquipmentPageMetaData> getPageData() async {
+  Future<Widget?> getDrawerForUserWithSubmodel(
+      BuildContext context, String? submodel);
+
+  Future<EquipmentPageMetaData> getPageData(BuildContext context) async {
     String? memberPicture = await coreUtils.getMemberPicture();
     String? submodel = await coreUtils.getUserSubmodel();
+    Widget? drawer = context.mounted ? await getDrawerForUserWithSubmodel(context, submodel) : null;
 
     EquipmentPageMetaData result = EquipmentPageMetaData(
         memberPicture: memberPicture,
         submodel: submodel,
-        drawer: null
+        drawer: drawer
     );
 
     return result;
@@ -41,7 +44,6 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget{
     this.uuid,
     required this.bloc,
     required this.navDetailFunction,
-    this.drawer
   });
 
   EquipmentBloc _initialBlocCall() {
@@ -67,7 +69,7 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<EquipmentPageMetaData>(
-        future: getPageData(),
+        future: getPageData(context),
         builder: (ctx, snapshot) {
           if (snapshot.hasData) {
             EquipmentPageMetaData? pageData = snapshot.data;
@@ -79,6 +81,7 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget{
                     },
                     builder: (context, state) {
                       return Scaffold(
+                        drawer: pageData!.drawer,
                         body: _getBody(context, state, pageData),
                       );
                     }
@@ -93,13 +96,6 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget{
                 )
             );
           } else {
-            if (drawer != null) {
-              return Scaffold(
-                drawer: drawer,
-                body: widgets.loadingNotice()
-              );
-            }
-
             return Scaffold(
                 body: widgets.loadingNotice()
             );

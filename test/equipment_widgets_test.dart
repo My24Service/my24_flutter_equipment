@@ -23,6 +23,11 @@ class EquipmentDetailPage extends BaseEquipmentDetailPage {
   }) : super(
       navDetailFunction: navDetailFunction
   );
+
+  @override
+  Future<Widget?> getDrawerForUserWithSubmodel(BuildContext context, String? submodel) async {
+    return null;
+  }
 }
 
 
