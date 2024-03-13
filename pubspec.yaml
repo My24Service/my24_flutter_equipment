@@ -18,7 +18,7 @@ dependencies:
     git:
       url: https://github.com/My24Service/my24_flutter_core.git
   my24_flutter_orders:
-#            path: ../my24_flutter_orders
+#    path: ../my24_flutter_orders
     git:
       url: https://github.com/My24Service/my24_flutter_orders.git
       ref: develop

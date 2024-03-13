@@ -20,6 +20,7 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget{
   final String? uuid;
   final CoreWidgets widgets = CoreWidgets();
   final NavDetailFunction navDetailFunction;
+  final Widget? drawer;
 
   Future<EquipmentPageMetaData> getPageData() async {
     String? memberPicture = await coreUtils.getMemberPicture();
@@ -40,6 +41,7 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget{
     this.uuid,
     required this.bloc,
     required this.navDetailFunction,
+    this.drawer
   });
 
   EquipmentBloc _initialBlocCall() {
@@ -91,6 +93,13 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget{
                 )
             );
           } else {
+            if (drawer != null) {
+              return Scaffold(
+                drawer: drawer,
+                body: widgets.loadingNotice()
+              );
+            }
+
             return Scaffold(
                 body: widgets.loadingNotice()
             );
