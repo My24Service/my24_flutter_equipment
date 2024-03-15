@@ -20,6 +20,11 @@ class Equipment extends BaseModel {
   final int? id;
   final String? identifier;
   final String? name;
+  final String? brand;
+  final String? description;
+  final String? installationDate;
+  final String? productionDate;
+  final String? serialnumber;
   final int? location;
   final String? locationName;
 
@@ -27,6 +32,11 @@ class Equipment extends BaseModel {
     this.id,
     this.identifier,
     this.name,
+    this.brand,
+    this.description,
+    this.installationDate,
+    this.productionDate,
+    this.serialnumber,
     this.location,
     this.locationName
   });
@@ -36,6 +46,11 @@ class Equipment extends BaseModel {
       id: parsedJson['id'],
       identifier: parsedJson['identifier'],
       name: parsedJson['name'],
+      brand: parsedJson['brand'],
+      description: parsedJson['description'],
+      installationDate: parsedJson['installation_date'],
+      productionDate: parsedJson['production_date'],
+      serialnumber: parsedJson['serialnumber'],
       location: parsedJson['location'],
       locationName: parsedJson['location_name']
     );

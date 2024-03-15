@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my24_flutter_core/i18n.dart';
 
 import 'package:my24_flutter_core/models/base_models.dart';
 import 'package:my24_flutter_core/widgets/slivers/base_widgets.dart';
@@ -84,7 +85,10 @@ class EquipmentDetailWidget extends BaseSliverListStatelessWidget{
               (BuildContext context, int index) {
             return Column(
               children: [
-                EquipmentInfoCard(equipment: equipment),
+                EquipmentInfoCard(
+                  equipment: equipment,
+                  i18n: i18n,
+                ),
                 widgets.getMy24Divider(context),
               ],
             );
@@ -257,10 +261,12 @@ class EquipmentDetailWidget extends BaseSliverListStatelessWidget{
 
 class EquipmentInfoCard extends StatelessWidget {
   final Equipment equipment;
+  final My24i18n i18n;
 
   const EquipmentInfoCard({
     super.key,
-    required this.equipment
+    required this.equipment,
+    required this.i18n
   });
 
   @override
@@ -278,6 +284,26 @@ class EquipmentInfoCard extends StatelessWidget {
             Icons.construction,
             color: Colors.blue[500],
           ),
+        ),
+        ListTile(
+          title: Text(checkNull(equipment.brand)),
+          subtitle: Text(i18n.$trans('brand')),
+        ),
+        ListTile(
+          title: Text(checkNull(equipment.installationDate)),
+          subtitle: Text(i18n.$trans('installation_date')),
+        ),
+        ListTile(
+          title: Text(checkNull(equipment.productionDate)),
+          subtitle: Text(i18n.$trans('production_date')),
+        ),
+        ListTile(
+          title: Text(checkNull(equipment.serialnumber)),
+          subtitle: Text(i18n.$trans('serialnumber')),
+        ),
+        ListTile(
+          title: Text(checkNull(equipment.description)),
+          subtitle: Text(i18n.$trans('description')),
         ),
       ],
     );
