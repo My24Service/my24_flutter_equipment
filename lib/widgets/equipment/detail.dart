@@ -285,7 +285,7 @@ class EquipmentInfoCard extends StatelessWidget {
             color: Colors.blue[500],
           ),
         ),
-        if (equipment.brand != null)
+        if (equipment.brand != null && equipment.brand != "")
           ListTile(
             title: Text(checkNull(equipment.brand)),
             subtitle: Text(i18n.$trans('brand')),
