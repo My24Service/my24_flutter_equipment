@@ -285,26 +285,31 @@ class EquipmentInfoCard extends StatelessWidget {
             color: Colors.blue[500],
           ),
         ),
-        ListTile(
-          title: Text(checkNull(equipment.brand)),
-          subtitle: Text(i18n.$trans('brand')),
-        ),
-        ListTile(
-          title: Text(checkNull(equipment.installationDate)),
-          subtitle: Text(i18n.$trans('installation_date')),
-        ),
-        ListTile(
-          title: Text(checkNull(equipment.productionDate)),
-          subtitle: Text(i18n.$trans('production_date')),
-        ),
-        ListTile(
-          title: Text(checkNull(equipment.serialnumber)),
-          subtitle: Text(i18n.$trans('serialnumber')),
-        ),
-        ListTile(
-          title: Text(checkNull(equipment.description)),
-          subtitle: Text(i18n.$trans('description')),
-        ),
+        if (equipment.brand != null)
+          ListTile(
+            title: Text(checkNull(equipment.brand)),
+            subtitle: Text(i18n.$trans('brand')),
+          ),
+        if (equipment.installationDate != null)
+          ListTile(
+            title: Text(checkNull(equipment.installationDate)),
+            subtitle: Text(i18n.$trans('installation_date')),
+          ),
+        if (equipment.productionDate != null)
+          ListTile(
+            title: Text(checkNull(equipment.productionDate)),
+            subtitle: Text(i18n.$trans('production_date')),
+          ),
+        if (equipment.serialnumber != null)
+          ListTile(
+            title: Text(checkNull(equipment.serialnumber)),
+            subtitle: Text(i18n.$trans('serialnumber')),
+          ),
+        if (equipment.description != null)
+          ListTile(
+            title: Text(checkNull(equipment.description)),
+            subtitle: Text(i18n.$trans('description')),
+          ),
       ],
     );
   }
