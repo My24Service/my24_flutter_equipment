@@ -18,6 +18,8 @@ class EquipmentPageMetaData {
 
 class Equipment extends BaseModel {
   final int? id;
+  final int? customer;
+  final int? branch;
   final String? identifier;
   final String? name;
   final String? brand;
@@ -30,6 +32,8 @@ class Equipment extends BaseModel {
 
   Equipment({
     this.id,
+    this.customer,
+    this.branch,
     this.identifier,
     this.name,
     this.brand,
@@ -44,6 +48,8 @@ class Equipment extends BaseModel {
   factory Equipment.fromJson(Map<String, dynamic> parsedJson) {
     return Equipment(
       id: parsedJson['id'],
+      customer: parsedJson['customer'],
+      branch: parsedJson['branch'],
       identifier: parsedJson['identifier'],
       name: parsedJson['name'],
       brand: parsedJson['brand'],
