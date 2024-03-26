@@ -8,11 +8,13 @@ class EquipmentPageMetaData {
   final String? memberPicture;
   final String? submodel;
   final Widget? drawer;
+  final List<String> orderTypes;
 
   EquipmentPageMetaData({
     required this.memberPicture,
     required this.submodel,
     required this.drawer,
+    required this.orderTypes
   }) : super();
 }
 

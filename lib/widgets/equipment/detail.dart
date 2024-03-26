@@ -4,6 +4,7 @@ import 'package:my24_flutter_core/i18n.dart';
 
 import 'package:my24_flutter_core/models/base_models.dart';
 import 'package:my24_flutter_core/widgets/slivers/base_widgets.dart';
+import 'package:my24_flutter_core/widgets/widgets.dart';
 import 'package:my24_flutter_orders/models/order/models.dart';
 import 'package:my24_flutter_orders/models/orderline/models.dart';
 import 'package:my24_flutter_orders/pages/types.dart';
@@ -19,6 +20,8 @@ class EquipmentDetailWidget extends BaseSliverListStatelessWidget{
   final int? pk;
   final String? uuid;
   final NavDetailFunction navDetailFunction;
+  final NavFormFromEquipmentFunction navFormFromEquipmentFunction;
+  final List<String> orderTypes;
 
   EquipmentDetailWidget({
     super.key,
@@ -31,7 +34,9 @@ class EquipmentDetailWidget extends BaseSliverListStatelessWidget{
     required super.i18n,
     required this.pk,
     required this.uuid,
-    required this.navDetailFunction
+    required this.navDetailFunction,
+    required this.navFormFromEquipmentFunction,
+    required this.orderTypes
   }) {
     searchController.text = searchQuery ?? '';
   }
@@ -82,12 +87,20 @@ class EquipmentDetailWidget extends BaseSliverListStatelessWidget{
   SliverList getPreSliverListContent(BuildContext context) {
     return SliverList(
         delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
+          (BuildContext context, int index) {
             return Column(
               children: [
                 EquipmentInfoCard(
                   equipment: equipment,
                   i18n: i18n,
+                ),
+                widgets.getMy24Divider(context),
+                CreateOrderButtons(
+                  orderTypes: orderTypes,
+                  uuid: uuid!,
+                  navFormFromEquipmentFunction: navFormFromEquipmentFunction,
+                  i18n: i18n,
+                  widgets: widgets,
                 ),
                 widgets.getMy24Divider(context),
               ],
@@ -313,4 +326,42 @@ class EquipmentInfoCard extends StatelessWidget {
       ],
     );
   }
+}
+
+class CreateOrderButtons extends StatelessWidget {
+  final List<String> orderTypes;
+  final String uuid;
+  final NavFormFromEquipmentFunction navFormFromEquipmentFunction;
+  final My24i18n i18n;
+  final CoreWidgets widgets;
+
+  const CreateOrderButtons({
+    super.key,
+    required this.orderTypes,
+    required this.uuid,
+    required this.navFormFromEquipmentFunction,
+    required this.i18n,
+    required this.widgets
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> buttons = [];
+    for (int i=0; i<orderTypes.length; i++) {
+      buttons.add(
+          widgets.createElevatedButtonColored(
+            orderTypes[i],
+            () => navFormFromEquipmentFunction(context, uuid, orderTypes[i])
+          )
+      );
+    }
+
+    return ListTile(
+      title: Text(i18n.$trans('detail.new_order')),
+      subtitle: Column(
+        children: buttons,
+      ),
+    );
+  }
+
 }

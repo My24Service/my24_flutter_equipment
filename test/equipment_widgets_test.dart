@@ -13,6 +13,7 @@ import 'package:my24_flutter_equipment/widgets/equipment/detail.dart';
 import 'fixtures.dart';
 
 void navDetailFunction(BuildContext context, int orderPk) {}
+void navFormFromEquipmentFunction(BuildContext context, String uuid, String orderType) {}
 
 class EquipmentDetailPage extends BaseEquipmentDetailPage {
   EquipmentDetailPage({
@@ -21,7 +22,8 @@ class EquipmentDetailPage extends BaseEquipmentDetailPage {
     super.uuid,
     required super.bloc,
   }) : super(
-      navDetailFunction: navDetailFunction
+    navDetailFunction: navDetailFunction,
+    navFormFromEquipmentFunction: navFormFromEquipmentFunction
   );
 
   @override
@@ -76,7 +78,7 @@ void main() async {
 
     EquipmentDetailPage widget = EquipmentDetailPage(
         bloc: equipmentBloc,
-        uuid: "c56ddfe1-f51b-4045-9d85-776e8ab0dcd4"
+        uuid: "c56ddfe1-f51b-4045-9d85-776e8ab0dcd4",
     );
 
     await mockNetworkImagesFor(() async => await tester.pumpWidget(
@@ -118,8 +120,8 @@ void main() async {
         .thenAnswer((_) async => http.Response(equipment, 200));
 
     EquipmentDetailPage widget = EquipmentDetailPage(
-        bloc: equipmentBloc,
-        pk: 1
+      bloc: equipmentBloc,
+      pk: 1,
     );
 
     await mockNetworkImagesFor(() async => await tester.pumpWidget(

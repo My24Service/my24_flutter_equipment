@@ -6,6 +6,8 @@ import 'package:my24_flutter_core/widgets/widgets.dart';
 import 'package:my24_flutter_core/i18n.dart';
 import 'package:my24_flutter_core/models/models.dart';
 import 'package:my24_flutter_equipment/blocs/equipment_states.dart';
+import 'package:my24_flutter_orders/models/order/api.dart';
+import 'package:my24_flutter_orders/models/order/models.dart';
 import 'package:my24_flutter_orders/pages/types.dart';
 
 import '../../blocs/equipment_bloc.dart';
@@ -13,13 +15,15 @@ import '../../models/equipment/models.dart';
 import '../../widgets/equipment/detail.dart';
 import '../../widgets/equipment/error.dart';
 
-abstract class BaseEquipmentDetailPage extends StatelessWidget{
+abstract class BaseEquipmentDetailPage extends StatelessWidget {
   final i18n = My24i18n(basePath: "equipment");
   final EquipmentBloc bloc;
   final int? pk;
   final String? uuid;
   final CoreWidgets widgets = CoreWidgets();
   final NavDetailFunction navDetailFunction;
+  final NavFormFromEquipmentFunction navFormFromEquipmentFunction;
+  final OrderApi orderApi = OrderApi();
 
   Future<Widget?> getDrawerForUserWithSubmodel(
       BuildContext context, String? submodel);
@@ -28,11 +32,13 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget{
     String? memberPicture = await coreUtils.getMemberPicture();
     String? submodel = await coreUtils.getUserSubmodel();
     Widget? drawer = context.mounted ? await getDrawerForUserWithSubmodel(context, submodel) : null;
+    final OrderTypes orderTypes = await orderApi.fetchOrderTypes();
 
     EquipmentPageMetaData result = EquipmentPageMetaData(
-        memberPicture: memberPicture,
-        submodel: submodel,
-        drawer: drawer
+      memberPicture: memberPicture,
+      submodel: submodel,
+      drawer: drawer,
+      orderTypes: orderTypes.getForEquipmentDetail()
     );
 
     return result;
@@ -44,6 +50,7 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget{
     this.uuid,
     required this.bloc,
     required this.navDetailFunction,
+    required this.navFormFromEquipmentFunction,
   });
 
   EquipmentBloc _initialBlocCall() {
@@ -141,7 +148,9 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget{
         i18n: i18n,
         pk: pk,
         uuid: uuid,
-        navDetailFunction: navDetailFunction
+        navDetailFunction: navDetailFunction,
+        navFormFromEquipmentFunction: navFormFromEquipmentFunction,
+        orderTypes: pageData.orderTypes,
       );
     }
 
