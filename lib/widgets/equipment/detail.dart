@@ -5,6 +5,7 @@ import 'package:my24_flutter_core/i18n.dart';
 import 'package:my24_flutter_core/models/base_models.dart';
 import 'package:my24_flutter_core/widgets/slivers/base_widgets.dart';
 import 'package:my24_flutter_core/widgets/widgets.dart';
+import 'package:my24_flutter_orders/common/widgets.dart';
 import 'package:my24_flutter_orders/models/order/models.dart';
 import 'package:my24_flutter_orders/models/orderline/models.dart';
 import 'package:my24_flutter_orders/pages/types.dart';
@@ -139,18 +140,20 @@ class EquipmentDetailWidget extends BaseSliverListStatelessWidget{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
-          title: widgets.createOrderHistoryListHeader2(order.orderDate!),
-          subtitle: widgets.createOrderHistoryListSubtitle2(
-              order,
-              widgets.buildItemListCustomWidget(
+          title: OrderHistoryWithAcceptedListHeader(
+            date: order.orderDate!,
+            customerOrderAccepted: order.customerOrderAccepted!,
+          ),
+          subtitle: OrderHistoryListSubtitle(
+              order: order,
+              workorderWidget: order.customerOrderAccepted! ? widgets.buildItemListCustomWidget(
                   i18n.$trans('detail.info_workorder'),
                   _createWorkorderText(order, context)
-              ),
-              widgets.buildItemListCustomWidget(
-                  i18n.$trans('detail.info_view_order'),
-                  _createOrderDetailButton(context, order)
-              )
+              ) : null,
           ),
+          onTap: () {
+            _navOrderDetail(context, order.id!);
+          }
         ),
         Padding(
             padding: const EdgeInsets.only(left: 20),
@@ -162,13 +165,6 @@ class EquipmentDetailWidget extends BaseSliverListStatelessWidget{
 
   Widget _createWorkorderText(Order order, BuildContext context) {
     return widgets.createViewWorkOrderButton(order.workorderPdfUrl, context);
-  }
-
-  Widget _createOrderDetailButton(BuildContext context, Order order) {
-    return widgets.createElevatedButtonColored(
-        i18n.$trans('detail.button_view_order'),
-        () => _navOrderDetail(context, order.id!)
-    );
   }
 
   Widget _createOrderlinesSection(BuildContext context, List<Orderline>? orderLines) {
