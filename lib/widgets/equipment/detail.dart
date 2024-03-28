@@ -104,6 +104,7 @@ class EquipmentDetailWidget extends BaseSliverListStatelessWidget{
                   widgets: widgets,
                 ),
                 widgets.getMy24Divider(context),
+                widgets.createHeader(i18n.$trans('detail.order_history'))
               ],
             );
           },
@@ -353,7 +354,7 @@ class CreateOrderButtons extends StatelessWidget {
     }
 
     return ListTile(
-      title: Text(i18n.$trans('detail.new_order')),
+      title: widgets.createHeader(i18n.$trans('detail.new_order')),
       subtitle: Column(
         children: buttons,
       ),
