@@ -55,4 +55,9 @@ class EquipmentApi extends BaseCrud<Equipment, EquipmentPaginated> {
 
     return results;
   }
+
+  Future<EquipmentPaginated> getForLocation(int locationPk) async {
+    Map<String, dynamic> filters = { 'location': locationPk };
+    return await list(filters: filters);
+  }
 }

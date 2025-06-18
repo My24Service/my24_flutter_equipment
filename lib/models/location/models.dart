@@ -1,6 +1,21 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 
 import 'package:my24_flutter_core/models/base_models.dart';
+
+class EquipmentLocationPageMetaData {
+  final String? memberPicture;
+  final String? submodel;
+  final Widget? drawer;
+  final List<String> orderTypes;
+
+  EquipmentLocationPageMetaData({
+    required this.memberPicture,
+    required this.submodel,
+    required this.drawer,
+    required this.orderTypes
+  }) : super();
+}
 
 class EquipmentLocation extends BaseModel {
   final int? id;

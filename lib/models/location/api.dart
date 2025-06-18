@@ -49,7 +49,7 @@ class EquipmentLocationApi extends BaseCrud<EquipmentLocation, EquipmentLocation
   }
 
   Future <List<EquipmentLocationTypeAheadModel>> typeAhead(String query, int? branch) async {
-    Map<String, dynamic> filters = {'q': query};
+    Map<String, dynamic> filters = {'q': query, 'page_size': 1000};
     if (branch != null) {
       filters['branch'] = branch;
     }
@@ -61,5 +61,9 @@ class EquipmentLocationApi extends BaseCrud<EquipmentLocation, EquipmentLocation
         EquipmentLocationTypeAheadModel.fromJson(i)).toList();
 
     return results;
+  }
+
+  Future<EquipmentLocation> getByUuid(String uuid) async {
+    return await detail(uuid, basePathAddition: 'uuid/');
   }
 }
