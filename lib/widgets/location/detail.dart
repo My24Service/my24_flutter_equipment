@@ -25,6 +25,7 @@ class LocationDetailWidget extends BaseSliverListStatelessWidget{
   final NavDetailFunction navDetailFunction;
   final NavFormFromEquipmentFunction navFormFromEquipmentFunction;
   final List<String> orderTypes;
+  // TODO use a function-type with signature
   final Function navEquipmentDetailFunction;
 
   LocationDetailWidget({
@@ -332,7 +333,10 @@ class EquipmentListWidget extends StatelessWidget {
                         Text(equipment.results![index].identifier!),
                         widgets.createElevatedButtonColored(
                           i18n.$trans('detail.nav_equipment_detail'),
-                          () => navEquipmentDetailFunction(equipment.results![index].id)
+                          () => navEquipmentDetailFunction(
+                              context,
+                              equipment.results![index].id
+                          )
                         )
                       ],
                     )
@@ -344,5 +348,4 @@ class EquipmentListWidget extends StatelessWidget {
         ]
     );
   }
-
 }
