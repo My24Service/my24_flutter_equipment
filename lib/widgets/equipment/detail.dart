@@ -95,8 +95,8 @@ class EquipmentDetailWidget extends BaseSliverListStatelessWidget{
                   equipment: equipment,
                   i18n: i18n,
                 ),
-                widgets.getMy24Divider(context),
-                CreateOrderButtons(
+                if (orderTypes.isNotEmpty) widgets.getMy24Divider(context),
+                if (orderTypes.isNotEmpty) CreateOrderButtons(
                   orderTypes: orderTypes,
                   uuid: uuid!,
                   navFormFromEquipmentFunction: navFormFromEquipmentFunction,
@@ -118,8 +118,8 @@ class EquipmentDetailWidget extends BaseSliverListStatelessWidget{
     return SliverList(
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            Order order = orders.results![index];
-            Widget content = _getContent(context, order);
+            final Order order = orders.results![index];
+            final Widget content = _getContent(context, order);
 
             return Column(
               children: [
@@ -138,7 +138,6 @@ class EquipmentDetailWidget extends BaseSliverListStatelessWidget{
   // private methods
   Widget _getContent(BuildContext context, Order order) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
           title: OrderHistoryWithAcceptedListHeader(
@@ -351,6 +350,10 @@ class CreateOrderButtons extends StatelessWidget {
             () => navFormFromEquipmentFunction(context, uuid, orderTypes[i])
           )
       );
+    }
+
+    if (buttons.isEmpty) {
+      return const SizedBox();
     }
 
     return ListTile(

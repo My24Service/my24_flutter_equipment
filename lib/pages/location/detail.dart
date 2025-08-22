@@ -150,11 +150,11 @@ abstract class BaseLocationDetailPage extends StatelessWidget {
         i18n: i18n,
         pk: pk,
         uuid: uuid,
-        navDetailFunction: navDetailFunction,
-        navFormFromEquipmentFunction: navFormFromEquipmentFunction,
         orderTypes: pageData.orderTypes,
         equipment: state.equipment,
-        navEquipmentDetailFunction: navDetailFunction,
+        navDetailFunction: navDetailFunction,
+        navFormFromEquipmentFunction: navFormFromEquipmentFunction,
+        navEquipmentDetailFunction: navEquipmentDetail,
       );
     }
 

@@ -14,7 +14,198 @@ import 'package:my24_flutter_orders/pages/types.dart';
 import '../../blocs/location_bloc.dart';
 import '../../models/location/models.dart';
 
-class LocationDetailWidget extends BaseSliverListStatelessWidget{
+enum EquipmentLocationListType {
+  equipment,
+  history
+}
+
+typedef OnTapEquipmentLocation = Function(EquipmentLocationListType type);
+
+class EquipmentLocationTabs extends StatefulWidget {
+  final OnTapEquipmentLocation onTap;
+  final EquipmentLocationListType currentListType;
+  const EquipmentLocationTabs( {this.currentListType=EquipmentLocationListType.equipment,
+    required this.onTap,
+    super.key});
+
+  @override
+  State<StatefulWidget> createState() => _EquipmentLocationTabsState();
+}
+
+class _EquipmentLocationTabsState extends State<EquipmentLocationTabs> with SingleTickerProviderStateMixin {
+  late TabController tabController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    tabController = TabController(
+        length: 2,
+        vsync: this,
+        initialIndex: widget.currentListType == EquipmentLocationListType.equipment ? 0 : 1)
+      ..addListener(_onTap);
+  }
+
+  void _onTap() {
+    if (!tabController.indexIsChanging) {
+      widget.onTap(tabController.index == 0 ? EquipmentLocationListType.equipment : EquipmentLocationListType.history);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TabBar(
+      controller: tabController,
+      tabs: const [
+        Tab( text: 'Equipment' ),
+        Tab( text: 'History' )
+      ]
+    );
+  }
+}
+
+
+class EquipmentLocationView extends StatefulWidget {
+  final EquipmentPaginated equipment;
+  final Orders orders;
+  final My24i18n i18n;
+  final CoreWidgets widgets;
+  final NavDetailFunction navDetailFunction;
+  final NavFormFromEquipmentFunction navFormFromEquipmentFunction;
+  final NavDetailFunction navEquipmentDetailFunction;
+
+  const EquipmentLocationView({required this.i18n, required this.widgets,
+    required this.navDetailFunction,
+    required this.navFormFromEquipmentFunction,
+    required this.navEquipmentDetailFunction,
+    required this.orders, required this.equipment, super.key});
+
+  @override
+  State<StatefulWidget> createState() => _EquipmentLocationViewState();
+}
+
+class _EquipmentLocationViewState extends State<EquipmentLocationView> {
+  EquipmentLocationListType _listType = EquipmentLocationListType.equipment;
+
+  bool isEquipmentActive() => _listType == EquipmentLocationListType.equipment;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _onTap(EquipmentLocationListType listType) {
+    if (listType != _listType) {
+      setState(() {
+        _listType = listType;
+      });
+    }
+  }
+
+  Widget? _buildEquipment(BuildContext context, int index) {
+    if (index < (widget.equipment.results?.length ?? 0)) {
+      final Equipment equipment = widget.equipment.results![index];
+
+      return ListTile(
+          title: Text(equipment.name ?? "(no name)"),
+          subtitle: Column(
+            children: [
+              Text(equipment.identifier ?? "(no identifier)"),
+              widget.widgets.createElevatedButtonColored(
+                  widget.i18n.$trans('detail.nav_equipment_detail'),
+                      () => widget.navEquipmentDetailFunction(
+                      context,
+                      equipment.id!
+                  )
+              )
+            ],
+          )
+      );
+    }
+    return null;
+  }
+
+  Widget? _buildOrder(BuildContext context, int index) {
+    if (index < (widget.orders.results?.length ?? 0)) {
+      final Order order = widget.orders.results![index];
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          ListTile(
+            title: OrderHistoryWithAcceptedListHeader(
+              date: order.orderDate!,
+              customerOrderAccepted: order.customerOrderAccepted!,
+            ),
+            subtitle: OrderHistoryListSubtitle(
+              order: order,
+              workorderWidget: order.customerOrderAccepted! ? widget.widgets.buildItemListCustomWidget(
+                  widget.i18n.$trans('detail.info_workorder'),
+                  widget.widgets.createViewWorkOrderButton(order.workorderPdfUrl, context), // _createWorkorderText(order, context)
+              ) : null,
+            ),
+            onTap: () {
+              if (order.id != null) {
+                widget.navDetailFunction(context, order.id!); // _navOrderDetail(context, order.id!);
+              }
+            }
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: _createOrderlinesSection(context, order.orderLines),
+          )
+      ] );
+    }
+    return null;
+  }
+
+  Widget _createOrderlinesSection(BuildContext context, List<Orderline>? orderLines) {
+    return widget.widgets.buildItemsSection(
+        context,
+        widget.i18n.$trans('detail.header_orderlines'),
+        orderLines,
+            (Orderline orderline) {
+          String equipmentLocationTitle = "${widget.i18n.$trans('info_equipment', pathOverride: 'generic')} / ${widget.i18n.$trans('info_location', pathOverride: 'generic')}";
+          String equipmentLocationValue = "${orderline.product?? '-'} / ${orderline.location?? '-'}";
+          return <Widget>[
+            ...widget.widgets.buildItemListKeyValueList(equipmentLocationTitle, equipmentLocationValue),
+            if (orderline.remarks != null && orderline.remarks != "")
+              ...widget.widgets.buildItemListKeyValueList(widget.i18n.$trans('info_remarks', pathOverride: 'generic'), orderline.remarks)
+          ];
+        },
+            (Orderline orderline) {
+          return <Widget>[];
+        },
+        withLastDivider: false
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    int totalItems = 1; // tabs
+    if (isEquipmentActive()) {
+      totalItems += widget.equipment.results?.length ?? 0;
+    } else {
+      totalItems += widget.orders.results?.length ?? 0;
+    }
+
+    return SliverList.builder(
+        itemBuilder: (BuildContext context, int index) {
+          if (index == 0) {
+            return EquipmentLocationTabs(onTap: _onTap);
+          }
+
+          if (isEquipmentActive())
+            return _buildEquipment(context, index-1);
+          else
+            return _buildOrder(context, index-1);
+        },
+        itemCount: totalItems
+    );
+  }
+}
+
+
+class LocationDetailWidget extends BaseStatelessWidget {
   final EquipmentLocation location;
   final Orders orders;
   final EquipmentPaginated equipment;
@@ -25,8 +216,7 @@ class LocationDetailWidget extends BaseSliverListStatelessWidget{
   final NavDetailFunction navDetailFunction;
   final NavFormFromEquipmentFunction navFormFromEquipmentFunction;
   final List<String> orderTypes;
-  // TODO use a function-type with signature
-  final Function navEquipmentDetailFunction;
+  final NavDetailFunction navEquipmentDetailFunction;
 
   LocationDetailWidget({
     super.key,
@@ -101,101 +291,12 @@ class LocationDetailWidget extends BaseSliverListStatelessWidget{
                   location: location,
                   i18n: i18n,
                 ),
-                widgets.createHeader(i18n.$trans('detail.equipment_header')),
-                EquipmentListWidget(
-                  equipment: equipment,
-                  widgets: widgets,
-                  i18n: i18n,
-                  navEquipmentDetailFunction: navEquipmentDetailFunction,
-                ),
-                widgets.getMy24Divider(context),
-                widgets.createHeader(i18n.$trans('detail.order_history'))
               ],
             );
           },
           childCount: 1,
         )
     );
-  }
-
-  @override
-  SliverList getSliverList(BuildContext context) {
-    return SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            Order order = orders.results![index];
-            Widget content = _getContent(context, order);
-
-            return Column(
-              children: [
-                content,
-                const SizedBox(height: 2),
-                if (index < orders.results!.length-1)
-                  widgets.getMy24Divider(context)
-              ],
-            );
-          },
-          childCount: orders.results!.length,
-        )
-    );
-  }
-
-  // private methods
-  Widget _getContent(BuildContext context, Order order) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListTile(
-          title: OrderHistoryWithAcceptedListHeader(
-            date: order.orderDate!,
-            customerOrderAccepted: order.customerOrderAccepted!,
-          ),
-          subtitle: OrderHistoryListSubtitle(
-              order: order,
-              workorderWidget: order.customerOrderAccepted! ? widgets.buildItemListCustomWidget(
-                  i18n.$trans('detail.info_workorder'),
-                  _createWorkorderText(order, context)
-              ) : null,
-          ),
-          onTap: () {
-            _navOrderDetail(context, order.id!);
-          }
-        ),
-        Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: _createOrderlinesSection(context, order.orderLines)
-        )
-      ],
-    );
-  }
-
-  Widget _createWorkorderText(Order order, BuildContext context) {
-    return widgets.createViewWorkOrderButton(order.workorderPdfUrl, context);
-  }
-
-  Widget _createOrderlinesSection(BuildContext context, List<Orderline>? orderLines) {
-    return widgets.buildItemsSection(
-        context,
-        i18n.$trans('detail.header_orderlines'),
-        orderLines,
-            (Orderline orderline) {
-          String equipmentLocationTitle = "${i18n.$trans('info_equipment', pathOverride: 'generic')} / ${i18n.$trans('info_location', pathOverride: 'generic')}";
-          String equipmentLocationValue = "${orderline.product?? '-'} / ${orderline.location?? '-'}";
-          return <Widget>[
-            ...widgets.buildItemListKeyValueList(equipmentLocationTitle, equipmentLocationValue),
-            if (orderline.remarks != null && orderline.remarks != "")
-              ...widgets.buildItemListKeyValueList(i18n.$trans('info_remarks', pathOverride: 'generic'), orderline.remarks)
-          ];
-        },
-            (Orderline orderline) {
-          return <Widget>[];
-        },
-        withLastDivider: false
-    );
-  }
-
-  void _navOrderDetail(BuildContext context, int orderPk) {
-    navDetailFunction(context, orderPk);
   }
 
   _nextPage(BuildContext context) {
@@ -272,6 +373,19 @@ class LocationDetailWidget extends BaseSliverListStatelessWidget{
       throw Exception("No pk and no uuid");
     }
   }
+
+  @override
+  Widget getContentSliver(BuildContext context) {
+    return EquipmentLocationView(
+      equipment: equipment,
+      orders: orders,
+      i18n: i18n,
+      widgets: widgets,
+      navDetailFunction: navDetailFunction,
+      navFormFromEquipmentFunction: navFormFromEquipmentFunction,
+      navEquipmentDetailFunction: navEquipmentDetailFunction,
+    );
+  }
 }
 
 class LocationInfoCard extends StatelessWidget {
@@ -301,51 +415,6 @@ class LocationInfoCard extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class EquipmentListWidget extends StatelessWidget {
-  final EquipmentPaginated equipment;
-  final CoreWidgets widgets;
-  final My24i18n i18n;
-  final Function navEquipmentDetailFunction;
-
-  const EquipmentListWidget({
-    super.key,
-    required this.equipment,
-    required this.widgets,
-    required this.i18n,
-    required this.navEquipmentDetailFunction,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return ListTile(
-                    title: Text(equipment.results![index].name!),
-                    subtitle: Column(
-                      children: [
-                        Text(equipment.results![index].identifier!),
-                        widgets.createElevatedButtonColored(
-                          i18n.$trans('detail.nav_equipment_detail'),
-                          () => navEquipmentDetailFunction(
-                              context,
-                              equipment.results![index].id
-                          )
-                        )
-                      ],
-                    )
-                );
-              },
-              childCount: equipment.count,
-            )
-          )
-        ]
     );
   }
 }
