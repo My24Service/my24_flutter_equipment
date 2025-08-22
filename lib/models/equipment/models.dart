@@ -31,6 +31,7 @@ class Equipment extends BaseModel {
   final String? serialnumber;
   final int? location;
   final String? locationName;
+  final String? uuid;
 
   Equipment({
     this.id,
@@ -44,12 +45,14 @@ class Equipment extends BaseModel {
     this.productionDate,
     this.serialnumber,
     this.location,
-    this.locationName
+    this.locationName,
+    this.uuid,
   });
 
   factory Equipment.fromJson(Map<String, dynamic> parsedJson) {
     return Equipment(
       id: parsedJson['id'],
+      uuid: parsedJson['uuid'],
       customer: parsedJson['customer'],
       branch: parsedJson['branch'],
       identifier: parsedJson['identifier'],
