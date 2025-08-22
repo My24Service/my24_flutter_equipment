@@ -138,6 +138,8 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget {
           pageSize: 20
       );
 
+      // So the `uuid` is null at this point, likely because we didn't receive that data
+      // from the backend. The `state.equipment` does not hold this information.
       return EquipmentDetailWidget(
         equipment: state.equipment,
         memberPicture: pageData!.memberPicture,
@@ -147,7 +149,7 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget {
         widgets: widgets,
         i18n: i18n,
         pk: pk,
-        uuid: uuid,
+        uuid: state.equipment.uuid,
         navDetailFunction: navDetailFunction,
         navFormFromEquipmentFunction: navFormFromEquipmentFunction,
         orderTypes: pageData.orderTypes,
