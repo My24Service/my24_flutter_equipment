@@ -22,7 +22,7 @@ abstract class BaseLocationDetailPage extends StatelessWidget {
   final String? uuid;
   final CoreWidgets widgets = CoreWidgets();
   final NavDetailFunction navDetailFunction;
-  final NavFormFromEquipmentFunction navFormFromEquipmentFunction;
+  final NavFormFromLocationFunction navFormFromLocationFunction;
   final OrderApi orderApi = OrderApi();
 
   Future<Widget?> getDrawerForUserWithSubmodel(
@@ -52,7 +52,7 @@ abstract class BaseLocationDetailPage extends StatelessWidget {
     this.uuid,
     required this.bloc,
     required this.navDetailFunction,
-    required this.navFormFromEquipmentFunction,
+    required this.navFormFromLocationFunction,
   });
 
   EquipmentLocationBloc _initialBlocCall() {
@@ -153,7 +153,7 @@ abstract class BaseLocationDetailPage extends StatelessWidget {
         orderTypes: pageData.orderTypes,
         equipment: state.equipment,
         navDetailFunction: navDetailFunction,
-        navFormFromEquipmentFunction: navFormFromEquipmentFunction,
+        navFormFromLocationFunction: navFormFromLocationFunction,
         navEquipmentDetailFunction: navEquipmentDetail,
       );
     }

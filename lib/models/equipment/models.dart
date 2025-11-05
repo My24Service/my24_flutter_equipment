@@ -32,6 +32,7 @@ class Equipment extends BaseModel {
   final int? location;
   final String? locationName;
   final String? uuid;
+  final List<EquipmentDocument>? documents;
 
   Equipment({
     this.id,
@@ -47,9 +48,13 @@ class Equipment extends BaseModel {
     this.location,
     this.locationName,
     this.uuid,
+    this.documents
   });
 
   factory Equipment.fromJson(Map<String, dynamic> parsedJson) {
+    var list = parsedJson['documents'] as List;
+    List<EquipmentDocument> documents = list.map((i) => EquipmentDocument.fromJson(i)).toList();
+
     return Equipment(
       id: parsedJson['id'],
       uuid: parsedJson['uuid'],
@@ -63,7 +68,8 @@ class Equipment extends BaseModel {
       productionDate: parsedJson['production_date'],
       serialnumber: parsedJson['serialnumber'],
       location: parsedJson['location'],
-      locationName: parsedJson['location_name']
+      locationName: parsedJson['location_name'],
+      documents: documents
     );
   }
 
@@ -266,5 +272,62 @@ class EquipmentCreateQuickResponse extends BaseModel {
   @override
   String toJson() {
     return '';
+  }
+}
+
+class EquipmentDocument extends BaseModel {
+  final int? id;
+  int? equipment;
+  final String? name;
+  final String? description;
+  final String? file;
+  final String? filename;
+  final String? url;
+
+  EquipmentDocument({
+    this.id,
+    this.equipment,
+    this.name,
+    this.description,
+    this.file,
+    this.filename,
+    this.url,
+  });
+
+  factory EquipmentDocument.fromJson(Map<String, dynamic> parsedJson) {
+    return EquipmentDocument(
+      id: parsedJson['id'],
+      equipment: parsedJson['equipment'],
+      name: parsedJson['name'],
+      description: parsedJson['description'],
+      file: parsedJson['file'],
+      filename: parsedJson['filename'],
+      url: parsedJson['url'],
+    );
+  }
+
+  @override
+  String toJson() {
+    // only add file when it's base64 encoded
+    String? useFile;
+
+    try {
+      base64Decode(file!);
+      useFile = file!;
+    } catch(e) {
+      useFile = null;
+    }
+
+    Map body = {
+      'equipment': equipment,
+      'name': name,
+      'description': description,
+    };
+
+    if (useFile != null) {
+      body['file'] = useFile;
+    }
+
+    return json.encode(body);
   }
 }

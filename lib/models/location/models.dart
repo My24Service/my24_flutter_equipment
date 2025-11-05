@@ -13,19 +13,25 @@ class EquipmentLocationPageMetaData {
     required this.memberPicture,
     required this.submodel,
     required this.drawer,
-    required this.orderTypes
+    required this.orderTypes,
   }) : super();
 }
 
 class EquipmentLocation extends BaseModel {
   final int? id;
+  final int? customer;
+  final int? branch;
   final String? identifier;
   final String? name;
+  final List<EquipmentLocationDocument>? documents;
 
   EquipmentLocation({
     this.id,
+    this.customer,
+    this.branch,
     this.identifier,
     this.name,
+    this.documents
   });
 
   static List<EquipmentLocation> getListFromResponse(String response) {
@@ -35,10 +41,16 @@ class EquipmentLocation extends BaseModel {
   }
 
   factory EquipmentLocation.fromJson(Map<String, dynamic> parsedJson) {
+    var list = parsedJson['documents'] as List;
+    List<EquipmentLocationDocument> documents = list.map((i) => EquipmentLocationDocument.fromJson(i)).toList();
+
     return EquipmentLocation(
       id: parsedJson['id'],
+      customer: parsedJson['customer'],
+      branch: parsedJson['branch'],
       identifier: parsedJson['identifier'],
       name: parsedJson['name'],
+      documents: documents
     );
   }
 
@@ -193,5 +205,62 @@ class EquipmentLocationCreateQuickResponse extends BaseModel {
   @override
   String toJson() {
     return '';
+  }
+}
+
+class EquipmentLocationDocument extends BaseModel {
+  final int? id;
+  int? location;
+  final String? name;
+  final String? description;
+  final String? file;
+  final String? filename;
+  final String? url;
+
+  EquipmentLocationDocument({
+    this.id,
+    this.location,
+    this.name,
+    this.description,
+    this.file,
+    this.filename,
+    this.url,
+  });
+
+  factory EquipmentLocationDocument.fromJson(Map<String, dynamic> parsedJson) {
+    return EquipmentLocationDocument(
+      id: parsedJson['id'],
+      location: parsedJson['location'],
+      name: parsedJson['name'],
+      description: parsedJson['description'],
+      file: parsedJson['file'],
+      filename: parsedJson['filename'],
+      url: parsedJson['url'],
+    );
+  }
+
+  @override
+  String toJson() {
+    // only add file when it's base64 encoded
+    String? useFile;
+
+    try {
+      base64Decode(file!);
+      useFile = file!;
+    } catch(e) {
+      useFile = null;
+    }
+
+    Map body = {
+      'location': location,
+      'name': name,
+      'description': description,
+    };
+
+    if (useFile != null) {
+      body['file'] = useFile;
+    }
+
+    return json.encode(body);
   }
 }
