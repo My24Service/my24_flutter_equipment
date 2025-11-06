@@ -28,7 +28,7 @@ abstract class BaseLocationDetailPage extends StatelessWidget {
   Future<Widget?> getDrawerForUserWithSubmodel(
       BuildContext context, String? submodel);
 
-  void navEquipmentDetail(BuildContext context, int equipmentPk);
+  void navEquipmentDetail(BuildContext context, int equipmentPk, {bool? withDrawer});
 
   Future<EquipmentLocationPageMetaData> getPageData(BuildContext context) async {
     String? memberPicture = await coreUtils.getMemberPicture();

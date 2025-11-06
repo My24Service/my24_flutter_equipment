@@ -20,8 +20,11 @@ class EquipmentLocationApi extends BaseCrud<EquipmentLocation, EquipmentLocation
     return EquipmentLocations.fromJson(parsedJson!);
   }
 
-  Future<List<EquipmentLocation>> fetchLocationsForSelect({int? branch}) async {
-    final Map<String, dynamic> filters = branch != null ? {'branch': branch} : {};
+  Future<List<EquipmentLocation>> fetchLocationsForSelect({int? branch, int? customerPk}) async {
+    final Map<String, dynamic> filters = {};
+    filters['branch'] = branch;
+    filters['customer'] = customerPk;
+
     final String response = await super.getListResponseBody(
       filters: filters,
       basePathAddition: 'list_for_select/'
@@ -48,11 +51,11 @@ class EquipmentLocationApi extends BaseCrud<EquipmentLocation, EquipmentLocation
     return EquipmentLocationCreateQuickResponse.fromJson(result as Map<String, dynamic>);
   }
 
-  Future <List<EquipmentLocationTypeAheadModel>> typeAhead(String query, int? branch) async {
+  Future <List<EquipmentLocationTypeAheadModel>> typeAhead(String query, {int? branch, int? customerPk}) async {
     Map<String, dynamic> filters = {'q': query, 'page_size': 1000};
-    if (branch != null) {
-      filters['branch'] = branch;
-    }
+    filters['branch'] = branch;
+    filters['customer'] = customerPk;
+
     final String responseBody = await getListResponseBody(
         filters: filters, basePathAddition: 'autocomplete');
     var parsedJson = json.decode(responseBody);

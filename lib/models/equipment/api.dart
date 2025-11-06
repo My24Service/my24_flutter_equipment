@@ -40,11 +40,10 @@ class EquipmentApi extends BaseCrud<Equipment, EquipmentPaginated> {
     return await detail(uuid, basePathAddition: 'uuid/');
   }
 
-  Future <List<EquipmentTypeAheadModel>> typeAhead(String query, int? branch) async {
+  Future <List<EquipmentTypeAheadModel>> typeAhead(String query, {int? branch, int? customerPk}) async {
     Map<String, dynamic> filters = {'q': query};
-    if (branch != null) {
-      filters['branch'] = branch;
-    }
+    filters['branch'] = branch;
+    filters['customer'] = customerPk;
 
     final String responseBody = await getListResponseBody(
         filters: filters, basePathAddition: 'autocomplete');
