@@ -12,7 +12,7 @@ import 'package:my24_flutter_equipment/pages/equipment/detail.dart';
 import 'package:my24_flutter_equipment/widgets/equipment/detail.dart';
 import 'fixtures.dart';
 
-void navDetailFunction(BuildContext context, int orderPk) {}
+void navDetailFunction(BuildContext context, int orderPk, {bool? withoutDrawer}) {}
 void navFormFromEquipmentFunction(BuildContext context, String uuid, String orderType) {}
 
 class EquipmentDetailPage extends BaseEquipmentDetailPage {
@@ -27,7 +27,7 @@ class EquipmentDetailPage extends BaseEquipmentDetailPage {
   );
 
   @override
-  Future<Widget?> getDrawerForUserWithSubmodel(BuildContext context, String? submodel) async {
+  Future<Widget?> getDrawer(BuildContext context, String? submodel) async {
     return null;
   }
 }

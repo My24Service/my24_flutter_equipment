@@ -25,15 +25,15 @@ abstract class BaseLocationDetailPage extends StatelessWidget {
   final NavFormFromLocationFunction navFormFromLocationFunction;
   final OrderApi orderApi = OrderApi();
 
-  Future<Widget?> getDrawerForUserWithSubmodel(
+  Future<Widget?> getDrawer(
       BuildContext context, String? submodel);
 
-  void navEquipmentDetail(BuildContext context, int equipmentPk, {bool? withDrawer});
+  void navEquipmentDetail(BuildContext context, int equipmentPk, {bool? withoutDrawer});
 
   Future<EquipmentLocationPageMetaData> getPageData(BuildContext context) async {
     String? memberPicture = await coreUtils.getMemberPicture();
     String? submodel = await coreUtils.getUserSubmodel();
-    Widget? drawer = context.mounted ? await getDrawerForUserWithSubmodel(context, submodel) : null;
+    Widget? drawer = context.mounted ? await getDrawer(context, submodel) : null;
     final OrderTypes orderTypes = await orderApi.fetchOrderTypes();
 
     EquipmentLocationPageMetaData result = EquipmentLocationPageMetaData(

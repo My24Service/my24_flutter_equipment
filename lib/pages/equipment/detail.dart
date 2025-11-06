@@ -25,13 +25,13 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget {
   final NavFormFromEquipmentFunction navFormFromEquipmentFunction;
   final OrderApi orderApi = OrderApi();
 
-  Future<Widget?> getDrawerForUserWithSubmodel(
+  Future<Widget?> getDrawer(
       BuildContext context, String? submodel);
 
   Future<EquipmentPageMetaData> getPageData(BuildContext context) async {
     String? memberPicture = await coreUtils.getMemberPicture();
     String? submodel = await coreUtils.getUserSubmodel();
-    Widget? drawer = context.mounted ? await getDrawerForUserWithSubmodel(context, submodel) : null;
+    Widget? drawer = context.mounted ? await getDrawer(context, submodel) : null;
     final OrderTypes orderTypes = await orderApi.fetchOrderTypes();
 
     EquipmentPageMetaData result = EquipmentPageMetaData(
