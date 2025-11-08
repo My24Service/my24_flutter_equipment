@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
+import 'package:my24_flutter_core/dev_logging.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,7 +33,6 @@ class EquipmentDetailPage extends BaseEquipmentDetailPage {
   }
 }
 
-
 Widget createWidget({Widget? child}) {
   return MaterialApp(
       home: Scaffold(
@@ -46,11 +46,13 @@ Widget createWidget({Widget? child}) {
 void main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
   SharedPreferences.setMockInitialValues({});
+  setUpLogging();
 
   testWidgets('loads equipment detail by uuid', (tester) async {
     final client = MockClient();
     final EquipmentBloc equipmentBloc = EquipmentBloc();
     equipmentBloc.orderApi.httpClient = client;
+    equipmentBloc.coreUtils.httpClient = client;
     equipmentBloc.equipmentApi.httpClient = client;
 
     SharedPreferences.setMockInitialValues({
@@ -76,6 +78,12 @@ void main() async {
         headers: anyNamed('headers')))
         .thenAnswer((_) async => http.Response(equipment, 200));
 
+    // return order types data with a 200
+    when(client.get(Uri.parse(
+        'https://demo.my24service-dev.com/api/order/order/order_types/'),
+        headers: anyNamed('headers')))
+        .thenAnswer((_) async => http.Response(orderTypes, 200));
+
     EquipmentDetailPage widget = EquipmentDetailPage(
         bloc: equipmentBloc,
         uuid: "c56ddfe1-f51b-4045-9d85-776e8ab0dcd4",
@@ -94,6 +102,7 @@ void main() async {
     final client = MockClient();
     final EquipmentBloc equipmentBloc = EquipmentBloc();
     equipmentBloc.orderApi.httpClient = client;
+    equipmentBloc.coreUtils.httpClient = client;
     equipmentBloc.equipmentApi.httpClient = client;
 
     SharedPreferences.setMockInitialValues({
@@ -118,6 +127,12 @@ void main() async {
         'https://demo.my24service-dev.com/api/equipment/equipment/1/'),
         headers: anyNamed('headers')))
         .thenAnswer((_) async => http.Response(equipment, 200));
+
+    // return order types data with a 200
+    when(client.get(Uri.parse(
+        'https://demo.my24service-dev.com/api/order/order/order_types/'),
+        headers: anyNamed('headers')))
+        .thenAnswer((_) async => http.Response(orderTypes, 200));
 
     EquipmentDetailPage widget = EquipmentDetailPage(
       bloc: equipmentBloc,
