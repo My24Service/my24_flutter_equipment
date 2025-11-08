@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:logging/logging.dart';
+import 'package:my24_flutter_core/utils.dart';
 
 import 'package:my24_flutter_equipment/models/equipment/api.dart';
 import 'package:my24_flutter_orders/models/order/api.dart';
@@ -36,6 +37,7 @@ class EquipmentEvent {
 class EquipmentBloc extends Bloc<EquipmentEvent, EquipmentBaseState> {
   final EquipmentApi equipmentApi = EquipmentApi();
   final OrderApi orderApi = OrderApi();
+  final CoreUtils coreUtils = CoreUtils();
 
   EquipmentBloc() : super(EquipmentInitialState()) {
     on<EquipmentEvent>((event, emit) async {

@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:logging/logging.dart';
+import 'package:my24_flutter_core/utils.dart';
 import 'package:my24_flutter_equipment/models/equipment/api.dart';
 import 'package:my24_flutter_equipment/models/equipment/models.dart';
 
@@ -39,6 +40,7 @@ class EquipmentLocationBloc extends Bloc<EquipmentLocationEvent, EquipmentLocati
   final EquipmentLocationApi locationApi = EquipmentLocationApi();
   final EquipmentApi equipmentApi = EquipmentApi();
   final OrderApi orderApi = OrderApi();
+  final CoreUtils coreUtils = CoreUtils();
 
   EquipmentLocationBloc() : super(EquipmentLocationInitialState()) {
     on<EquipmentLocationEvent>((event, emit) async {

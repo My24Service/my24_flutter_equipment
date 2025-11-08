@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:my24_flutter_core/utils.dart';
 import 'package:my24_flutter_core/widgets/widgets.dart';
 import 'package:my24_flutter_core/i18n.dart';
 import 'package:my24_flutter_core/models/models.dart';
 import 'package:my24_flutter_equipment/blocs/equipment_states.dart';
-import 'package:my24_flutter_orders/models/order/api.dart';
 import 'package:my24_flutter_orders/models/order/models.dart';
 import 'package:my24_flutter_orders/pages/types.dart';
 
@@ -23,16 +21,15 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget {
   final CoreWidgets widgets = CoreWidgets();
   final NavDetailFunction navDetailFunction;
   final NavFormFromEquipmentFunction navFormFromEquipmentFunction;
-  final OrderApi orderApi = OrderApi();
 
   Future<Widget?> getDrawer(
       BuildContext context, String? submodel);
 
   Future<EquipmentPageMetaData> getPageData(BuildContext context) async {
-    String? memberPicture = await coreUtils.getMemberPicture();
-    String? submodel = await coreUtils.getUserSubmodel();
+    String? memberPicture = await bloc.coreUtils.getMemberPicture();
+    String? submodel = await bloc.coreUtils.getUserSubmodel();
     Widget? drawer = context.mounted ? await getDrawer(context, submodel) : null;
-    final OrderTypes orderTypes = await orderApi.fetchOrderTypes();
+    final OrderTypes orderTypes = await bloc.orderApi.fetchOrderTypes();
 
     EquipmentPageMetaData result = EquipmentPageMetaData(
       memberPicture: memberPicture,
@@ -80,7 +77,6 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget {
         builder: (ctx, snapshot) {
           if (snapshot.hasData) {
             EquipmentPageMetaData? pageData = snapshot.data;
-
             return BlocProvider<EquipmentBloc>(
                 create: (context) => _initialBlocCall(),
                 child: BlocConsumer<EquipmentBloc, EquipmentBaseState>(
@@ -95,6 +91,7 @@ abstract class BaseEquipmentDetailPage extends StatelessWidget {
                 )
             );
           } else if (snapshot.hasError) {
+            // print("ERROR: ${snapshot.error}");
             return Center(
                 child: Text(
                     i18n.$trans("error_arg", pathOverride: "generic",
